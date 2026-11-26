@@ -851,7 +851,12 @@ main.shell {
   }
 
   .nav-inner {
+    grid-template-columns: auto minmax(0, 1fr) auto;
     gap: 8px;
+  }
+
+  .view-switch {
+    justify-self: center;
   }
 
   .brand {
@@ -859,7 +864,7 @@ main.shell {
   }
 
   .brand-name {
-    max-width: 9ch;
+    max-width: 10ch;
     font-size: 12px;
     line-height: 1.1;
   }
@@ -1006,9 +1011,7 @@ main.shell {
   .workspace-toolbar .action-button svg {
     display: none;
   }
-}
 
-@media (max-width: 360px) {
   .brand-name {
     position: absolute;
     width: 1px;
