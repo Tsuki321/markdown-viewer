@@ -2,7 +2,11 @@
 
 [Open Markdown Viewer](https://tsuki321.github.io/markdown-viewer/)
 
-Paste or type Markdown in **Source**, then use the **Preview** tab in the navigation bar to read the rendered document. **Format** tidies common Markdown spacing and syntax. **Copy** copies the current Markdown source in either view. The editor saves your latest draft in the current browser.
+Paste or type Markdown in **Source**, then use the **Preview** tab in the navigation bar to read the rendered document. **Format** tidies common Markdown spacing and syntax. **Copy** copies the Markdown source in either view. The editor saves your latest draft in the current browser.
+
+Use **Display** to adjust the source and preview text independently, wrap long source lines, or choose a light, dark, or system theme. On phones, source lines wrap automatically and long previews scroll with the page. Display settings are saved in your browser.
+
+Use **File** to open Markdown or plain text, download your draft as a `.md` file, or print the preview. Your browser’s print dialog can also save the preview as a PDF.
 
 The preview supports GitHub Flavored Markdown, including tables, task lists, strikethrough, and fenced code blocks. MathJax renders inline and display LaTeX math, including AMS equations, matrices, and aligned expressions.
 

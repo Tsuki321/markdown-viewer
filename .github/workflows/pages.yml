@@ -68,6 +68,31 @@ jobs:
               await page.reload({ waitUntil: 'domcontentloaded' });
               await sourceTab.click();
               assert.equal(await source.inputValue(), formatted);
+
+              const display = page.locator('#display-menu summary');
+              const initialFont = await source.evaluate(node => getComputedStyle(node).fontSize);
+              await display.click();
+              await page.getByRole('button', { name: 'Increase source text size' }).click();
+              await page.getByLabel('Theme', { exact: true }).selectOption('light');
+              await page.reload({ waitUntil: 'domcontentloaded' });
+              await page.waitForFunction(() => document.documentElement.dataset.theme === 'light');
+              assert.notEqual(await source.evaluate(node => getComputedStyle(node).fontSize), initialFont);
+
+              const phone = await browser.newContext({ viewport: { width: 320, height: 720 }, isMobile: true, hasTouch: true });
+              const mobile = await phone.newPage();
+              await mobile.goto(process.env.SITE_URL, { waitUntil: 'domcontentloaded' });
+              const mobileSource = mobile.getByRole('textbox', { name: 'Markdown source' });
+              await mobile.waitForFunction(() => document.querySelector('#markdown-source').wrap === 'soft');
+              assert.equal((await mobileSource.boundingBox()).width, 320);
+              const mobileSettings = await mobile.locator('#display-menu summary').boundingBox();
+              assert.ok(mobileSettings.x + mobileSettings.width <= 320 && mobileSettings.height >= 44);
+              await mobileSource.fill('# Mobile preview\n\n' + 'A long preview paragraph. '.repeat(250));
+              await mobile.getByRole('tab', { name: 'Preview' }).tap();
+              await mobile.getByRole('heading', { name: 'Mobile preview' }).waitFor();
+              assert.ok(await mobile.evaluate(() => {
+                window.scrollTo(0, 300);
+                return window.scrollY > 0 && document.querySelector('.site-header').getBoundingClientRect().top === 0;
+              }));
             } finally {
               await browser.close();
             }

@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, interactive-widget=resizes-content">
   <meta name="theme-color" content="#101714">
   <meta name="description" content="Paste Markdown, tidy the source, and preview the result with LaTeX.">
   <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com https://cdn.jsdelivr.net; img-src 'self' https: http: data:; connect-src 'self' https://cdn.jsdelivr.net; base-uri 'none'; form-action 'none'">
@@ -41,19 +41,15 @@
   </header>
 
   <main class="shell">
-    <section class="intro" aria-labelledby="page-title">
-      <h1 id="page-title">Markdown <em>Viewer</em></h1>
-      <p class="intro-description">Paste Markdown, tidy the source, and preview the result with LaTeX.</p>
-    </section>
-
-    <section class="workspace" aria-labelledby="workspace-label">
+    <h1 class="sr-only">Markdown Viewer</h1>
+    <section class="workspace" aria-labelledby="workspace-label" data-view="source">
       <header class="workspace-toolbar">
         <h2 class="workspace-label" id="workspace-label">
           <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3h8l4 4v14H6a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2Z"/><path d="M14 3v5h4M8 12h6m-6 4h6"/></svg>
           <span id="workspace-mode">Markdown source</span>
         </h2>
         <div class="workspace-actions">
-          <button id="paste-button" class="action-button action-button-primary" type="button" title="Paste and replace the current Markdown">
+          <button id="paste-button" class="action-button action-button-primary" type="button" title="Paste into Markdown source">
             <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="8" y="2.5" width="8" height="4" rx="1"/><path d="M8 4.5H5a1 1 0 0 0-1 1v14a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-14a1 1 0 0 0-1-1h-3M12 10v7m-3-3 3 3 3-3"/></svg>
             <span>Paste</span>
           </button>
@@ -65,6 +61,61 @@
             <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="8" y="8" width="12" height="12" rx="2"/><path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2"/></svg>
             <span>Copy</span>
           </button>
+        </div>
+        <div class="workspace-options">
+          <details class="toolbar-menu" id="file-menu">
+            <summary class="action-button">
+              <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2Z"/></svg>
+              <span>File</span>
+            </summary>
+            <div class="menu-panel file-panel">
+              <button id="open-file" class="file-action" type="button"><span>Open file</span><small>Markdown or plain text</small></button>
+              <button id="download-file" class="file-action" type="button"><span>Download Markdown</span><small>Save a .md file</small></button>
+              <button id="print-preview" class="file-action" type="button"><span>Print preview</span><small>Print or save as PDF</small></button>
+            </div>
+            <input id="markdown-file" type="file" accept=".md,.markdown,.mdown,.mkd,.txt,text/markdown,text/plain" hidden>
+          </details>
+          <details class="toolbar-menu" id="display-menu">
+            <summary class="action-button">
+              <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 18 8 6l5 12M5 14h6m10 4v-5a2.5 2.5 0 0 0-5 0m5 2h-3.5a1.5 1.5 0 0 0 0 3H21"/></svg>
+              <span>Display</span>
+            </summary>
+            <div class="menu-panel display-panel">
+              <div class="setting-row" role="group" aria-labelledby="source-size-label">
+                <span id="source-size-label">Source text</span>
+                <div class="size-stepper" data-font-setting="sourceSize">
+                  <button type="button" data-step="-1" aria-label="Decrease source text size">−</button>
+                  <output aria-label="Source text size">100%</output>
+                  <button type="button" data-step="1" aria-label="Increase source text size">+</button>
+                </div>
+              </div>
+              <div class="setting-row" role="group" aria-labelledby="preview-size-label">
+                <span id="preview-size-label">Preview text</span>
+                <div class="size-stepper" data-font-setting="previewSize">
+                  <button type="button" data-step="-1" aria-label="Decrease preview text size">−</button>
+                  <output aria-label="Preview text size">100%</output>
+                  <button type="button" data-step="1" aria-label="Increase preview text size">+</button>
+                </div>
+              </div>
+              <div class="setting-row">
+                <label for="wrap-setting">Wrap source lines</label>
+                <select id="wrap-setting">
+                  <option value="auto">Automatic</option>
+                  <option value="on">On</option>
+                  <option value="off">Off</option>
+                </select>
+              </div>
+              <div class="setting-row">
+                <label for="theme-setting">Theme</label>
+                <select id="theme-setting">
+                  <option value="system">System</option>
+                  <option value="light">Light</option>
+                  <option value="dark">Dark</option>
+                </select>
+              </div>
+              <button id="reset-display" class="reset-display" type="button">Reset display settings</button>
+            </div>
+          </details>
         </div>
       </header>
 
@@ -87,8 +138,9 @@
 
     <footer class="page-footer">
       <details class="format-help">
-        <summary>LaTeX syntax</summary>
+        <summary>Markdown &amp; LaTeX help</summary>
         <div class="help-content">
+          <p>Headings <code># Heading</code> · Bold <code>**text**</code> · List <code>- Item</code></p>
           <p>Inline math <code>$E = mc^2$</code> or <code>\( E = mc^2 \)</code></p>
           <p>Display math <code>$$…$$</code> or <code>\[…\]</code></p>
           <p>For aligned equations, use <code>\begin{align}…\end{align}</code>.</p>
